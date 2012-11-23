@@ -7,5 +7,11 @@
 
 module Euler.Problem59 where
 
+import Data.Char
+
+strSum :: String -> Int
+strSum s = sum $ map ord s
+
 crack :: (String, Int)
-crack = ("", 0)
+crack = (plainText, strSum(plainText))
+  where plainText = ""
