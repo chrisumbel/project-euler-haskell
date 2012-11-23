@@ -24,7 +24,8 @@ library
   exposed-modules:   Euler.Problem1,
                      Euler.Problem9,
                      Euler.Problem12,
-                     Euler.Problem16
+                     Euler.Problem16,
+                     Euler.Problem59
 
 executable answer1
   hs-source-dirs:    Answer
@@ -94,6 +95,19 @@ test-suite test-problem16
   type:              exitcode-stdio-1.0
   hs-source-dirs:    Test
   main-is:           Test16.hs
+  build-depends:     base,
+                     project-euler-haskell,
+                     HUnit,
+                     QuickCheck,
+                     test-framework,
+                     test-framework-hunit,
+                     test-framework-quickcheck2,
+                     test-framework-th
+
+test-suite test-problem59
+  type:              exitcode-stdio-1.0
+  hs-source-dirs:    Test
+  main-is:           Test59.hs
   build-depends:     base,
                      project-euler-haskell,
                      HUnit,
