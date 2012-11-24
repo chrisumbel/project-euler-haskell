@@ -27,6 +27,7 @@ splitInts s =
 parseCipherText :: String -> [Int]
 parseCipherText s = [0]
 
+{- decipher a given ciphertext with a single given key recursively, byte-by-byte -}
 decipher :: String -> [Int] -> Int -> String
 decipher key cipherText pos
   | pos >= (length cipherText) = ""
@@ -36,6 +37,8 @@ decipher key cipherText pos
 decipherThes :: String -> [Int] -> Int
 decipherThes key cipherText = 0
 
+{- iterate a keyspace and decipher a ciphertext with each key. record a score
+   for each key of how confident we are that we found the plaintext. -}
 tryCrack :: String -> [String] -> [Int] -> [Int]
 tryCrack key [] cipherText = []
 tryCrack key keyspace cipherText = (decipherThes key cipherText) :
