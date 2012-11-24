@@ -116,4 +116,4 @@ test-suite test-problem59
                      test-framework-hunit,
                      test-framework-quickcheck2,
                      test-framework-th,
-                     text
+                     bytestring
