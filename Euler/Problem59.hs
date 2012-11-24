@@ -10,6 +10,21 @@ module Euler.Problem59 where
 import Data.Char
 import Data.Bits
 
+countSubStrings' :: String -> Int -> String -> Int -> Int -> Int
+countSubStrings' needle needlePos haystack pos matchCount =
+  if (pos >= (length haystack))
+  	then matchCount
+    else if (needle !! needlePos == haystack !! pos)
+      then if needlePos < (length needle) - 1
+        then countSubStrings' needle (needlePos + 1) haystack (pos + 1) matchCount
+        else countSubStrings' needle 0 haystack (pos + 1) (matchCount + 1)
+      else
+      	countSubStrings' needle 0 haystack (pos + 1) matchCount
+
+countSubStrings :: String -> String -> Int
+countSubStrings needle haystack = 
+  countSubStrings' needle 0 haystack 0 0
+
 {- add the ASCII values of each character in a string -}
 strSum :: String -> Int
 strSum s = sum $ map ord s
@@ -35,7 +50,10 @@ decipher key cipherText pos
     decipher key cipherText (pos + 1) 
 
 decipherThes :: String -> [Int] -> Int
-decipherThes key cipherText = 0
+decipherThes key cipherText = 
+  let plainText = decipher key cipherText 0
+  in (countSubStrings "the " plainText) + 
+    (countSubStrings "The " plainText)
 
 {- iterate a keyspace and decipher a ciphertext with each key. record a score
    for each key of how confident we are that we found the plaintext. -}

@@ -12,7 +12,7 @@ import Test.Framework.Providers.QuickCheck2 (testProperty)
 
 {- import qualified Data.ByteString.Lazy.Char8 as L -}
 
-import Euler.Problem59 (crack, strSum, splitInts, decipher)
+import Euler.Problem59 (crack, strSum, splitInts, tryCrack, decipher, countSubStrings)
 
 main = $(defaultMainGenerator)
 
@@ -50,3 +50,11 @@ case_decipher_shorter =
 
 case_decipher_xor =
   decipher "abc" [0, 0, 0, 97, 98, 99, 2, 3, 4] 0 @?= "abc\NUL\NUL\NULcag"
+
+{- countSubStrings -}
+case_countSubStrings_ = 
+  countSubStrings "the " "the thing is the other thing of the " @?= 3
+
+{-case_tryCrack_
+  tryCrack "aaa" [[a, b, c] | a <- ['a'..'z'], b <- ['a'..'z'], c <- ['a'..'z']] []
+-}
