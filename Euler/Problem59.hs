@@ -10,6 +10,7 @@ module Euler.Problem59 where
 import Data.Char
 import Data.Bits
 
+{- tokenize a string seperated by non-alpha characters -}
 tokenize' :: String -> [String]
 tokenize' "" = []
 tokenize' s =
@@ -18,6 +19,8 @@ tokenize' s =
     drop ((length firstToken) + 1) {- everything after the first separator -}
     s)
 
+{- tokenize a string seperated by non-alpha characters. remove empty strings.
+   public interface -}
 tokenize :: String -> [String]
 tokenize s = filter (/= "") (tokenize' s)
 
@@ -56,6 +59,7 @@ countEnglishWords s =
   in 
     length (filter (`elem` englishWords) (tokenize s))
 
+{- decipher a text with a given key and score it -}
 decipherAndScore :: String -> [Int] -> Int
 decipherAndScore key cipherText = 
   countEnglishWords (decipher key cipherText 0)
@@ -67,6 +71,7 @@ tryCrack key [] cipherText = []
 tryCrack key keyspace cipherText = (decipherAndScore key cipherText) :
   (tryCrack (head keyspace) (tail keyspace) cipherText)
 
+{- find the index of the first, maximum value of a list of Ints -}
 maxIndex' :: [Int] -> Int -> Int -> Int
 maxIndex' vals pos _maxIndex
   | pos > (length vals) - 1 =
@@ -76,17 +81,18 @@ maxIndex' vals pos _maxIndex
   | otherwise =
     maxIndex' vals (pos + 1) _maxIndex
 
+{- find the index of the first, maximum value of a list of Ints. 
+   public interface -}
 maxIndex :: [Int] -> Int
 maxIndex vals = maxIndex' vals 1 0
 
-crack :: String -> (String, String, Int)
-crack sCipherText = 
-  let keyspace = [[a, b, c] | a <- ['a'..'z'], b <- ['a'..'z'], c <- ['a'..'z']]
-      cipherText = (splitInts sCipherText)
+{- crack a given ciphertext with a given keyspace -}
+crack :: String -> [String] -> (String, String, Int)
+crack sCipherText keyspace = 
+  let cipherText = (splitInts sCipherText)
       winnerIndex = maxIndex (tryCrack (head keyspace) (tail keyspace) cipherText)
       winner = keyspace !! winnerIndex
       plainText = decipher winner cipherText 0
-  in (keyspace !! winnerIndex, plainText, strSum plainText)
-      
+  in (winner, plainText, strSum plainText)
 
 
