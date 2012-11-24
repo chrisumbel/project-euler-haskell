@@ -12,7 +12,7 @@ import Test.Framework.Providers.QuickCheck2 (testProperty)
 
 {- import qualified Data.ByteString.Lazy.Char8 as L -}
 
-import Euler.Problem59 (crack, strSum, splitInts)
+import Euler.Problem59 (crack, strSum, splitInts, decipher)
 
 main = $(defaultMainGenerator)
 
@@ -37,3 +37,16 @@ case_splitInts_singles =
 
 case_splitInts_multiple = 
   (splitInts "1, 23") @?= [1, 23]
+
+{- decipher -}
+case_decipher_matching_lengths =
+  decipher "aaa" [97, 97, 97] 0 @?= "\NUL\NUL\NUL"
+
+case_decipher_longer =
+  decipher "aaa" [97, 97, 97, 97] 0 @?= "\NUL\NUL\NUL\NUL"
+
+case_decipher_shorter =
+  decipher "aaa" [97, 97] 0 @?= "\NUL\NUL"
+
+case_decipher_xor =
+  decipher "abc" [0, 0, 0, 97, 98, 99, 2, 3, 4] 0 @?= "abc\NUL\NUL\NULcag"

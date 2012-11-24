@@ -8,6 +8,7 @@
 module Euler.Problem59 where
 
 import Data.Char
+import Data.Bits
 
 {- add the ASCII values of each character in a string -}
 strSum :: String -> Int
@@ -20,16 +21,28 @@ splitInts "" = []
 splitInts s =
   let firstToken = takeWhile (/= ',') s
   in read(firstToken) : splitInts (
-  	drop ((length firstToken) + 1) {- everything after the first comma -}
-  	s)
+    drop ((length firstToken) + 1) {- everything after the first comma -}
+    s)
 
 parseCipherText :: String -> [Int]
 parseCipherText s = [0]
 
-decipher :: String -> String -> String
-decipher key cipherText = ""
+decipher :: String -> [Int] -> Int -> String
+decipher key cipherText pos
+  | pos >= (length cipherText) = ""
+  | otherwise = chr ((ord (key !! (pos `mod` 3))) `xor` (cipherText !! pos)) : 
+    decipher key cipherText (pos + 1) 
+
+decipherThes :: String -> [Int] -> Int
+decipherThes key cipherText = 0
+
+tryCrack :: String -> [String] -> [Int] -> [Int]
+tryCrack key [] cipherText = []
+tryCrack key keyspace cipherText = (decipherThes key cipherText) :
+  (tryCrack (head keyspace) (tail keyspace) cipherText)
 
 crack :: (String, Int)
 crack = 
   let plainText = ""
+      keyspace = [[a, b, c] | a <- ['a'..'z'], b <- ['a'..'z'], c <- ['a'..'z']]
   in (plainText, strSum(plainText))
