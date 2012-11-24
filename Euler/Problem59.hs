@@ -3,6 +3,8 @@
 
   <http://projecteuler.net/problem=59>
 
+  Crack a given ciphertext with no konwn plaintext using a keyspace of 3 
+  lower-case chars 26 ** 3 = 17576
 -}
 
 module Euler.Problem59 where
@@ -55,7 +57,9 @@ countEnglishWords s =
   {- 25 most common english words from Oxford English Corpus 
 	 http://en.wikipedia.org/wiki/Most_common_words_in_English
   -}
-  let englishWords = ["THE", "BE", "TO", "OF", "AND", "A", "IN", "THAT", "HAVE", "I", "IT", "FOR", "NOT", "ON", "WITH", "HE", "AS", "YOU", "DO", "AT", "THIS", "BUT", "HIS", "BY", "FROM"]
+  let englishWords = ["THE", "BE", "TO", "OF", "AND", "A", "IN", "THAT", "HAVE", 
+                      "I", "IT", "FOR", "NOT", "ON", "WITH", "HE", "AS", "YOU", 
+                      "DO", "AT", "THIS", "BUT", "HIS", "BY", "FROM"]
   in 
     length (filter (`elem` englishWords) (tokenize s))
 
