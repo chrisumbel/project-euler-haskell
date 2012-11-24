@@ -10,15 +10,20 @@ module Euler.Problem59 where
 import Data.Char
 import Data.Bits
 
+{- count the matches of a substring in a string -}
 countSubStrings' :: String -> Int -> String -> Int -> Int -> Int
 countSubStrings' needle needlePos haystack pos matchCount =
   if (pos >= (length haystack))
-  	then matchCount
-    else if (needle !! needlePos == haystack !! pos)
-      then if needlePos < (length needle) - 1
-        then countSubStrings' needle (needlePos + 1) haystack (pos + 1) matchCount
-        else countSubStrings' needle 0 haystack (pos + 1) (matchCount + 1)
-      else
+    then matchCount {- no more haystack to match. return. -}
+    else 
+      if (needle !! needlePos == haystack !! pos)
+      then {- we're in a potential match -} 
+      	if needlePos < (length needle) - 1
+          then {- not done matching yet. keep going. -}
+          	countSubStrings' needle (needlePos + 1) haystack (pos + 1) matchCount          	
+          else {- match complete and successful -} 
+          	countSubStrings' needle 0 haystack (pos + 1) (matchCount + 1)
+      else {- no match, keep looking -}
       	countSubStrings' needle 0 haystack (pos + 1) matchCount
 
 countSubStrings :: String -> String -> Int
