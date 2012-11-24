@@ -10,25 +10,16 @@ module Euler.Problem59 where
 import Data.Char
 import Data.Bits
 
-{- count the matches of a substring in a string -}
-countSubStrings' :: String -> Int -> String -> Int -> Int -> Int
-countSubStrings' needle needlePos haystack pos matchCount =
-  if (pos >= (length haystack))
-    then matchCount {- no more haystack to match. return. -}
-    else 
-      if (needle !! needlePos == haystack !! pos)
-      then {- we're in a potential match -} 
-      	if needlePos < (length needle) - 1
-          then {- not done matching yet. keep going. -}
-          	countSubStrings' needle (needlePos + 1) haystack (pos + 1) matchCount          	
-          else {- match complete and successful -} 
-          	countSubStrings' needle 0 haystack (pos + 1) (matchCount + 1)
-      else {- no match, keep looking -}
-      	countSubStrings' needle 0 haystack (pos + 1) matchCount
+tokenize' :: String -> [String]
+tokenize' "" = []
+tokenize' s =
+  let firstToken = takeWhile isAlpha s
+  in map toUpper firstToken : tokenize' (
+    drop ((length firstToken) + 1) {- everything after the first separator -}
+    s)
 
-countSubStrings :: String -> String -> Int
-countSubStrings needle haystack = 
-  countSubStrings' needle 0 haystack 0 0
+tokenize :: String -> [String]
+tokenize s = filter (/= "") (tokenize' s)
 
 {- add the ASCII values of each character in a string -}
 strSum :: String -> Int
@@ -54,11 +45,19 @@ decipher key cipherText pos
   | otherwise = chr ((ord (key !! (pos `mod` 3))) `xor` (cipherText !! pos)) : 
     decipher key cipherText (pos + 1) 
 
+countEnglishWords :: String -> Int
+countEnglishWords s = 
+  {- 10 most common english words from Oxford English Corpus 
+	 http://en.wikipedia.org/wiki/Most_common_words_in_English
+  -}
+  let englishWords = ["THE", "BE", "TO", "OF", "AND", "A", "IN", "THAT", "HAVE", "I"]
+  in 
+    length (filter (`elem` englishWords) (tokenize s))
+
 decipherThes :: String -> [Int] -> Int
 decipherThes key cipherText = 
   let plainText = decipher key cipherText 0
-  in (countSubStrings "the " plainText) + 
-    (countSubStrings "The " plainText)
+  in 0
 
 {- iterate a keyspace and decipher a ciphertext with each key. record a score
    for each key of how confident we are that we found the plaintext. -}
