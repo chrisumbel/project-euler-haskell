@@ -53,11 +53,11 @@ decipher key cipherText pos
   | otherwise = chr ((ord (key !! (pos `mod` 3))) `xor` (cipherText !! pos)) : 
     decipher key cipherText (pos + 1) 
 
-{- tokenize a given text and count the number of occurrences of the 10
+{- tokenize a given text and count the number of occurrences of the
    most commonly used English words. -}
 countEnglishWords :: String -> Int
 countEnglishWords s = 
-  {- 25 most common english words from Oxford English Corpus 
+  {- most common english words from Oxford English Corpus 
 	 http://en.wikipedia.org/wiki/Most_common_words_in_English
   -}
   let englishWords = ["THE", "BE", "TO"] {- , "OF", "AND", "A", "IN", "THAT", "HAVE", 
@@ -73,7 +73,7 @@ decipherAndScore key cipherText =
 
 {- iterate a keyspace and decipher a ciphertext with each key. record a score
    for each key of how confident we are that we found the plaintext. -}
-tryCrack :: String -> KeySpace -> [Int] -> [Int]
+tryCrack :: String -> KeySpace -> CipherText -> [Int]
 tryCrack key [] cipherText = []
 tryCrack key keyspace cipherText = (decipherAndScore key cipherText) :
   (tryCrack (head keyspace) (tail keyspace) cipherText)
