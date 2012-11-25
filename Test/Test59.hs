@@ -61,7 +61,7 @@ case_tokenize_mixed_case =
 
 {- countEnglishWords -}
 case_countEnglishWords_ = 
-  countEnglishWords "to be or not to be, that is the question." @?= 7
+  countEnglishWords "to be or not to be, that is the question." @?= 5
 
 {- maxIndex -}
 case_maxIndex_intermediate =
@@ -76,3 +76,4 @@ case_maxIndex_terminal =
 {- case_crack = 
 	let (key, plainText, textSum) = crack cipherText keyspace
 	in key @?= "god" -}
+

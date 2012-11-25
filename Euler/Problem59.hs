@@ -12,6 +12,9 @@ module Euler.Problem59 where
 import Data.Char
 import Data.Bits
 
+type KeySpace = [String]
+type CipherText = [Int]
+
 {- tokenize a string seperated by non-alpha characters -}
 tokenize' :: String -> [String]
 tokenize' "" = []
@@ -40,11 +43,11 @@ splitInts s =
     drop ((length firstToken) + 1) {- everything after the first comma -}
     s)
 
-parseCipherText :: String -> [Int]
+parseCipherText :: String -> CipherText
 parseCipherText s = [0]
 
 {- decipher a given ciphertext with a single given key recursively, byte-by-byte -}
-decipher :: String -> [Int] -> Int -> String
+decipher :: String -> CipherText -> Int -> String
 decipher key cipherText pos
   | pos >= (length cipherText) = ""
   | otherwise = chr ((ord (key !! (pos `mod` 3))) `xor` (cipherText !! pos)) : 
@@ -57,26 +60,26 @@ countEnglishWords s =
   {- 25 most common english words from Oxford English Corpus 
 	 http://en.wikipedia.org/wiki/Most_common_words_in_English
   -}
-  let englishWords = ["THE", "BE", "TO", "OF", "AND", "A", "IN", "THAT", "HAVE", 
+  let englishWords = ["THE", "BE", "TO"] {- , "OF", "AND", "A", "IN", "THAT", "HAVE", 
                       "I", "IT", "FOR", "NOT", "ON", "WITH", "HE", "AS", "YOU", 
-                      "DO", "AT", "THIS", "BUT", "HIS", "BY", "FROM"]
+                      "DO", "AT", "THIS", "BUT", "HIS", "BY", "FROM"] -}
   in 
     length (filter (`elem` englishWords) (tokenize s))
 
 {- decipher a text with a given key and score it -}
-decipherAndScore :: String -> [Int] -> Int
+decipherAndScore :: String -> CipherText -> Int
 decipherAndScore key cipherText = 
   countEnglishWords (decipher key cipherText 0)
 
 {- iterate a keyspace and decipher a ciphertext with each key. record a score
    for each key of how confident we are that we found the plaintext. -}
-tryCrack :: String -> [String] -> [Int] -> [Int]
+tryCrack :: String -> KeySpace -> [Int] -> [Int]
 tryCrack key [] cipherText = []
 tryCrack key keyspace cipherText = (decipherAndScore key cipherText) :
   (tryCrack (head keyspace) (tail keyspace) cipherText)
 
 {- find the index of the first, maximum value of a list of Ints -}
-maxIndex' :: [Int] -> Int -> Int -> Int
+maxIndex' :: Ord a => [a] -> Int -> Int -> Int
 maxIndex' vals pos _maxIndex
   | pos > (length vals) - 1 =
     _maxIndex
@@ -87,11 +90,11 @@ maxIndex' vals pos _maxIndex
 
 {- find the index of the first, maximum value of a list of Ints. 
    public interface -}
-maxIndex :: [Int] -> Int
+maxIndex :: Ord a => [a] -> Int
 maxIndex vals = maxIndex' vals 1 0
 
 {- crack a given ciphertext with a given keyspace -}
-crack :: String -> [String] -> (String, String, Int)
+crack :: String -> KeySpace -> (String, String, Int)
 crack sCipherText keyspace = 
   let cipherText = (splitInts sCipherText)
       winnerIndex = maxIndex (tryCrack (head keyspace) (tail keyspace) cipherText)
